@@ -3,54 +3,32 @@ package com.example.jpacustomer.sevice;
 import com.example.jpacustomer.model.Customer;
 import com.example.jpacustomer.repository.ICustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import java.util.List;
+import java.util.Optional;
 
+@Service
 public class CustomerService implements ICustomerService {
-    @PersistenceContext
-    private EntityManager em;
-
     @Autowired
-    ICustomerRepository customerRepository;
+    private ICustomerRepository customerRepository;
 
-
-    public List<Customer> findAllDAO() {
-        TypedQuery<Customer> query = em.createQuery("select c from Customer c", Customer.class);
-        return query.getResultList();
-    }
-
-
-    public List<Customer> showAll() {
-        return findAllDAO();
+    @Override
+    public Iterable<Customer> findAll() {
+        return customerRepository.findAll();
     }
 
     @Override
-    public List<Customer> findAll() {
-        return null;
-    }
-
-    @Override
-    public Customer findById(Long id) {
-        return null;
+    public Optional<Customer> findById(Long id) {
+        return customerRepository.findById(id);
     }
 
     @Override
     public void save(Customer customer) {
-       ;
+        customerRepository.save(customer);
     }
 
     @Override
-    public void delete(Long id) {
-
-    }
-
-    @Override
-    public Page<Customer> showAllListPage(Pageable pageable) {
-        return customerRepository.findAll(pageable);
+    public void remove(Long id) {
+        customerRepository.deleteById(id);
     }
 }

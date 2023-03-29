@@ -7,20 +7,24 @@
 </head>
 <body>
 <p><a th:href="@{/customer/create-form}">Create</a></p>
-<table>
+<table border="1">
     <tr>
-        <td>ID</td>
-        <td>Name</td>
-        <td>Age</td>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Province</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
-    <tr th:each="c : ${customer}">
-        <td th:text="${c.id}"></td>
-        <td th:text="${c.name}"></td>
-        <td th:text="${c.age}"></td>
-        <td><a th:href="@{/customer/{id}/editForm(id=${c.getId()})}">EDIT</a></td>
-        <td><a  th:href="@{/customer/{id}/delete(id=${c.getId()})}">DELETE</a></td>
-    </tr>
-
+    <th:block th:each="customer : ${customers}">
+        <tr>
+            <td th:text="${customer.name}"></td>
+            <td th:text="${customer.age}"></td>
+            <td th:if="${customer.province}" th:text="${customer.province.name}"></td>
+            <td th:unless="${customer.province}"></td>
+            <td><a th:href="@{/edit-customer/__${customer.id}__ }">Edit</a></td>
+            <td><a th:href="@{/delete-customer/__${customer.id}__ }">Delete</a></td>
+        </tr>
+    </th:block>
 </table>
 <div>
     <a th:href="@{'/customers'(page=${customer.number - 1})}" th:if="${customer.hasPrevious()}">Previous</a>

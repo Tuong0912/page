@@ -1,9 +1,9 @@
 package com.example.jpacustomer.repository;
 
-import com.example.jpacustomer.model.Customer;
+import com.example.jpacustomer.model.Province;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ICustomerRepository extends PagingAndSortingRepository<Customer, Long> {
+public interface IProvinceRepository extends PagingAndSortingRepository<Province, Long> {
 }

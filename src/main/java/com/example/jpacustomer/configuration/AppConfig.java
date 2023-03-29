@@ -1,10 +1,6 @@
 package com.example.jpacustomer.configuration;
 
-
-import com.example.jpacustomer.repository.CustomerRepository;
-import com.example.jpacustomer.repository.ICustomerRepository;
-import com.example.jpacustomer.sevice.CustomerService;
-import com.example.jpacustomer.sevice.ICustomerService;
+import com.example.jpacustomer.sevice.ProvinceService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -12,9 +8,10 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -27,6 +24,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import com.example.jpacustomer.ProvinceFormatter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -36,9 +34,10 @@ import java.util.Properties;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@EnableSpringDataWebSupport
+@EnableJpaRepositories("com.example.jpacustomer.repository")
 @ComponentScan("com.example.jpacustomer.controller")
 public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
+
     private ApplicationContext applicationContext;
 
     @Override
@@ -96,9 +95,9 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/customer");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/cms");
         dataSource.setUsername("root");
-        dataSource.setPassword("tuong2001");
+        dataSource.setPassword("123456");
         return dataSource;
     }
 
@@ -115,14 +114,8 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         return properties;
     }
-
-    @Bean
-    public ICustomerRepository customerRepository() {
-        return new CustomerRepository();
-    }
-
-    @Bean
-    public ICustomerService customerService() {
-        return new CustomerService();
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new ProvinceFormatter(applicationContext.getBean(ProvinceService.class)));
     }
 }
